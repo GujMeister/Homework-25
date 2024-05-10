@@ -15,6 +15,8 @@
 		8589E9552BED8BBF00CE5FBA /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589E9542BED8BBE00CE5FBA /* UIColor.swift */; };
 		8589E9572BEE736100CE5FBA /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589E9562BEE736100CE5FBA /* UIButton.swift */; };
 		8589E95E2BEE868000CE5FBA /* MusicPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589E95D2BEE868000CE5FBA /* MusicPlayerVM.swift */; };
+		8589E9602BEEB01000CE5FBA /* FiraGO-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8589E95F2BEEB01000CE5FBA /* FiraGO-Regular.ttf */; };
+		8589E9622BEEB1A200CE5FBA /* FiraGO-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8589E9612BEEB1A200CE5FBA /* FiraGO-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		8589E9542BED8BBE00CE5FBA /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		8589E9562BEE736100CE5FBA /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		8589E95D2BEE868000CE5FBA /* MusicPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerVM.swift; sourceTree = "<group>"; };
+		8589E95F2BEEB01000CE5FBA /* FiraGO-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FiraGO-Regular.ttf"; sourceTree = "<group>"; };
+		8589E9612BEEB1A200CE5FBA /* FiraGO-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FiraGO-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +87,8 @@
 			children = (
 				8589E9432BED815500CE5FBA /* Assets.xcassets */,
 				8589E9482BED815500CE5FBA /* Info.plist */,
+				8589E95F2BEEB01000CE5FBA /* FiraGO-Regular.ttf */,
+				8589E9612BEEB1A200CE5FBA /* FiraGO-Bold.ttf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -176,7 +182,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8589E9442BED815500CE5FBA /* Assets.xcassets in Resources */,
+				8589E9622BEEB1A200CE5FBA /* FiraGO-Bold.ttf in Resources */,
 				8589E9472BED815500CE5FBA /* Base in Resources */,
+				8589E9602BEEB01000CE5FBA /* FiraGO-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

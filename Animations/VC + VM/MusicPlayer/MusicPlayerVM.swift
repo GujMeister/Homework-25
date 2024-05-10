@@ -7,13 +7,7 @@
 
 import Foundation
 
-protocol MusicPlayerVMProtocol {
-    var isMusicPlaying: Bool { get set }
-    func playButtonTapped()
-    func updateImageTransform(isExpanded: Bool)
-}
-
-class MusicPlayerVM: MusicPlayerVMProtocol {
+class MusicPlayerVM {
     var isMusicPlaying: Bool = false
     
     func playButtonTapped() {

@@ -12,18 +12,23 @@ class MusicPlayerVC: UIViewController {
     var viewModel: MusicPlayerVM = MusicPlayerVM()
     
     private var sliderTimer: Timer?
-//    private var isMusicPlaying: Bool = true
     var selectedIcon: UIButton?
+    
+    private let categoryLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont(name: "FiraGO-Regular", size: 12)
+        label.text = "Liked Songs"
+        return label
+    }()
     
     private let albumImageView: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "MC")
-        image.tintColor = .white
         image.contentMode = .scaleAspectFit
-        image.backgroundColor = .secondarySystemBackground
-        image.layer.cornerRadius = 21
+        image.layer.cornerRadius = 22
         image.layer.masksToBounds = true
-        image.isUserInteractionEnabled = true
         return image
     }()
     
@@ -31,7 +36,7 @@ class MusicPlayerVC: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 24, weight: .regular)
+        label.font = UIFont(name: "FiraGO-Bold", size: 24)
         label.text = "Kickstart My Heart"
         return label
     }()
@@ -40,18 +45,25 @@ class MusicPlayerVC: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 16, weight: .regular)
+        label.font = UIFont(name: "FiraGO-Regular", size: 18)
         label.text = "Mötley Crüe"
         return label
     }()
     
     private lazy var timeSlider: UISlider = {
         let slider = UISlider()
+        slider.minimumTrackTintColor = UIColor.white
         slider.minimumValue = 0
         slider.maximumValue = 282 //4 min 42 sec in seconds
         slider.addAction(UIAction(handler: { [weak self] _ in
             self?.sliderValueChanged(slider)
         }), for: .touchUpInside)
+    
+        let configuration = UIImage.SymbolConfiguration(pointSize: 12)
+        let image = UIImage(systemName: "circle.fill", withConfiguration: configuration)
+        let whiteImage = image?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        slider.setThumbImage(whiteImage, for: .normal)
+        
         return slider
     }()
     
@@ -59,8 +71,8 @@ class MusicPlayerVC: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .left
-        label.font = .systemFont(ofSize: 8, weight: .regular)
-        label.text = "---"
+        label.font = UIFont(name: "FiraGO-Regular", size: 10)
+        label.text = "00:00"
         return label
     }()
     
@@ -68,11 +80,12 @@ class MusicPlayerVC: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .right
-        label.font = .systemFont(ofSize: 8, weight: .regular)
-        label.text = "---"
+        label.font = UIFont(name: "FiraGO-Regular", size: 10)
+        label.text = "4:42"
         return label
     }()
 
+    //Controls
     private lazy var playButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "play.circle.fill")
@@ -83,6 +96,35 @@ class MusicPlayerVC: UIViewController {
         return button
     }()
     
+    private lazy var forwardButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(systemName: "forward.end.fill")
+        button.createButton(with: image!)
+        return button
+    }()
+    
+    private lazy var backwardButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(systemName: "backward.end.fill")
+        button.createButton(with: image!)
+        return button
+    }()
+    
+    private lazy var repeatbutton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(systemName: "repeat")
+        button.createButton(with: image!)
+        return button
+    }()
+    
+    private lazy var shuffleButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(systemName: "shuffle")
+        button.createButton(with: image!)
+        return button
+    }()
+    
+    //Dockview and Buttons
     private let dockView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(hex: "637E61")
@@ -95,10 +137,7 @@ class MusicPlayerVC: UIViewController {
         let button = UIButton()
         let image = UIImage(systemName: "house")
         button.setImage(image, for: .normal)
-        button.contentHorizontalAlignment = .fill
-        button.contentVerticalAlignment = .fill
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .white // Adjust the color as needed
+        button.createButton(with: image!)
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.handleIconButtonTap(sender: button)
         }), for: .touchUpInside)
@@ -109,11 +148,7 @@ class MusicPlayerVC: UIViewController {
         let button = UIButton()
         let image = UIImage(systemName: "music.note")
         button.setImage(image, for: .normal)
-        button.isSelected = true
-        button.contentHorizontalAlignment = .fill
-        button.contentVerticalAlignment = .fill
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .white
+        button.createButton(with: image!)
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.handleIconButtonTap(sender: button)
         }), for: .touchUpInside)
@@ -123,40 +158,43 @@ class MusicPlayerVC: UIViewController {
     private lazy var loveButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "heart")
-        button.setImage(image, for: .normal)
-        button.contentHorizontalAlignment = .fill
-        button.contentVerticalAlignment = .fill
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .white
+        button.createButton(with: image!)
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.handleIconButtonTap(sender: button)
         }), for: .touchUpInside)
         return button
     }()
     
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
+        navigationController?.isNavigationBarHidden = true
+        albumImageView.transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
+        handleIconButtonTap(sender: musicButton)
         viewModel.setUpdateImageClosure { [weak self] transform in
             self?.albumImageView.transform = transform
         }
     }
     
-    // MARK: - Setup UI
+    // MARK: - Setup UIs
     func setupUI() {
         setupDockView()
         
-        let views = [albumImageView, songNameLabel, albumNameLabel, timeSlider, playButton, timeElapsedLabel, timeLeftLabel, dockView]
+        let views = [categoryLabel, albumImageView, songNameLabel, albumNameLabel, timeSlider, playButton, timeElapsedLabel, timeLeftLabel, forwardButton, backwardButton, repeatbutton, shuffleButton, dockView]
         
         views.forEach { view in
             self.view.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
         }
-        
+
         view.backgroundColor = UIColor(hex: "4C604D")
         
         NSLayoutConstraint.activate([
+            categoryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+            categoryLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             albumImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             albumImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height / 6),
             albumImageView.widthAnchor.constraint(equalTo: view.widthAnchor , multiplier: 0.88),
@@ -172,16 +210,36 @@ class MusicPlayerVC: UIViewController {
             timeSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             timeSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            timeElapsedLabel.leadingAnchor.constraint(equalTo: timeSlider.leadingAnchor),
-            timeElapsedLabel.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 1),
+            timeElapsedLabel.leadingAnchor.constraint(equalTo: timeSlider.leadingAnchor, constant: 2),
+            timeElapsedLabel.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 5),
             
-            timeLeftLabel.trailingAnchor.constraint(equalTo: timeSlider.trailingAnchor),
-            timeLeftLabel.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 1),
+            timeLeftLabel.trailingAnchor.constraint(equalTo: timeSlider.trailingAnchor, constant: -2),
+            timeLeftLabel.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 5),
             
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 10),
+            playButton.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 20),
             playButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1),
             playButton.widthAnchor.constraint(equalTo: playButton.heightAnchor),
+            
+            forwardButton.leadingAnchor.constraint(equalTo: playButton.trailingAnchor, constant: 20),
+            forwardButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
+            forwardButton.heightAnchor.constraint(equalTo: playButton.heightAnchor, multiplier: 0.45),
+            forwardButton.widthAnchor.constraint(equalTo: forwardButton.heightAnchor),
+            
+            backwardButton.trailingAnchor.constraint(equalTo: playButton.leadingAnchor, constant: -20),
+            backwardButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
+            backwardButton.heightAnchor.constraint(equalTo: playButton.heightAnchor, multiplier: 0.45),
+            backwardButton.widthAnchor.constraint(equalTo: backwardButton.heightAnchor),
+            
+            shuffleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            shuffleButton.heightAnchor.constraint(equalTo: playButton.heightAnchor, multiplier: 0.35),
+            shuffleButton.widthAnchor.constraint(equalTo: shuffleButton.heightAnchor),
+            shuffleButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
+            
+            repeatbutton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            repeatbutton.heightAnchor.constraint(equalTo: playButton.heightAnchor, multiplier: 0.35),
+            repeatbutton.widthAnchor.constraint(equalTo: repeatbutton.heightAnchor),
+            repeatbutton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             
             dockView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             dockView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.95),
@@ -207,12 +265,12 @@ class MusicPlayerVC: UIViewController {
     }
     
     func setupActivityIndicator() {
-        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: albumImageView.centerXAnchor),
-            activityIndicator.bottomAnchor.constraint(equalTo: albumImageView.bottomAnchor, constant: 15)
+            activityIndicator.bottomAnchor.constraint(equalTo: albumImageView.bottomAnchor, constant: -15)
         ])
         activityIndicator.startAnimating()
         
@@ -226,17 +284,20 @@ class MusicPlayerVC: UIViewController {
         }
     }
     
-    //MARK: - Choosing Icon Buttons Logic
+    //MARK: - Choosing Icon Buttons
     func handleIconButtonTap(sender: UIButton) {
-        print("Icon button tapped")
+        print("Dock icon tapped")
         deselectAllButtons(except: sender)
         sender.isSelected = true
         sender.tintColor = .yellow
         
-        let scaleFactor: CGFloat = 1.3
-        sender.transform = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
+        UIView.animate(withDuration: 0.2) {
+            let scaleFactor: CGFloat = 1.5
+            sender.transform = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
+        }
     }
     
+    //agia logika
     func deselectAllButtons(except selectedButton: UIButton) {
         homeButton.isSelected = false
         resetButtonSize(homeButton)
@@ -250,8 +311,10 @@ class MusicPlayerVC: UIViewController {
     
     func resetButtonSize(_ button: UIButton?) {
         guard let button = button else { return }
-        button.transform = .identity
-        button.tintColor = .white
+        UIView.animate(withDuration: 0.3) {
+            button.transform = .identity
+            button.tintColor = .white
+        }
     }
     
     // MARK: - Slider values and Label
@@ -263,25 +326,19 @@ class MusicPlayerVC: UIViewController {
         let secondsLeft = totalSeconds - elapsedSeconds
         timeLeftLabel.text = viewModel.formatSecondsToString(secondsLeft)
     }
-    
-//    func formatSecondsToString(_ seconds: Int) -> String {
-//        let minutes = seconds / 60
-//        let remainingSeconds = seconds % 60
-//        return String(format: "%02d:%02d", minutes, remainingSeconds)
-//    }
-    
+
     // MARK: - Play button Functions
     
     func playButtonTapped(_ sender: UIButton) {
       viewModel.playButtonTapped()
       print(viewModel.isMusicPlaying)
       if viewModel.isMusicPlaying {
-        print("Hello I'm in MUSIC IS PLAYING!")
+        print("LETS PLAY DA MUSICCC YEEEEEEEEEEEEEEAH")
         playButton.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
         toggleSliderTimer()
         setupActivityIndicator()
       } else {
-        print("Hello I'm in !isMusicPlaying")
+        print("OKAY EVERYONE PARTY IS OVER GO HOME")
         playButton.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
         stopSliderTimer()
         UIView.animate(withDuration: 0.2) {
@@ -290,6 +347,7 @@ class MusicPlayerVC: UIViewController {
       }
     }
 
+    //agia logika
     func toggleSliderTimer() {
         sliderTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
@@ -299,7 +357,7 @@ class MusicPlayerVC: UIViewController {
             }
         }
     }
-    
+    //da agi
     func stopSliderTimer() {
         sliderTimer?.invalidate()
         sliderTimer = nil
@@ -318,87 +376,6 @@ extension MusicPlayerVC {
     }
 }
 
-
 #Preview {
     MusicPlayerVC()
 }
-
-
-//func playButtonTapped(_ sender: UIButton) {
-////        viewModel.playButtonTapped()
-//    print(isMusicPlaying)
-//    if isMusicPlaying {
-//        print("Hello I'm in MUSIC IS PLAYING!")
-//        playButton.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-//        toggleSliderTimer()
-//        isMusicPlaying = false
-//        
-//        let activityIndicator = UIActivityIndicatorView(style: .medium)
-//        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(activityIndicator)
-//        NSLayoutConstraint.activate([
-//            activityIndicator.centerXAnchor.constraint(equalTo: albumImageView.centerXAnchor),
-//            activityIndicator.bottomAnchor.constraint(equalTo: albumImageView.bottomAnchor, constant: 15)
-//        ])
-//        activityIndicator.startAnimating()
-//        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            activityIndicator.stopAnimating()
-//            activityIndicator.removeFromSuperview()
-//            
-//            UIView.animate(withDuration: 0.2) {
-//                self.albumImageView.transform = .identity
-//            }
-//        }
-//    
-//    } else {
-//        print("Hello I'm in !isMusicPlaying")
-//        playButton.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-//        stopSliderTimer()
-//        isMusicPlaying = true
-//        
-//        UIView.animate(withDuration: 0.2) {
-//            self.albumImageView.transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-//        }
-//    }
-//}
-
-
-
-//    func playButtonTapped(_ sender: UIButton) {
-//        viewModel.playButtonTapped()
-//        print(viewModel.isMusicPlaying)
-//        if viewModel.isMusicPlaying {
-//            print("Hello I'm in MUSIC IS PLAYING!")
-//            playButton.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-//            toggleSliderTimer()
-//
-//            let activityIndicator = UIActivityIndicatorView(style: .medium)
-//            activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-//            view.addSubview(activityIndicator)
-//            NSLayoutConstraint.activate([
-//                activityIndicator.centerXAnchor.constraint(equalTo: albumImageView.centerXAnchor),
-//                activityIndicator.bottomAnchor.constraint(equalTo: albumImageView.bottomAnchor, constant: 15)
-//            ])
-//            activityIndicator.startAnimating()
-//
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                activityIndicator.stopAnimating()
-//                activityIndicator.removeFromSuperview()
-//
-//                UIView.animate(withDuration: 0.2) {
-//                    self.albumImageView.transform = .identity
-//                }
-//            }
-//
-//        } else {
-//            print("Hello I'm in !isMusicPlaying")
-//            playButton.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-//            stopSliderTimer()
-//
-//            UIView.animate(withDuration: 0.2) {
-//                self.albumImageView.transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-//            }
-//        }
-//    }
-    
