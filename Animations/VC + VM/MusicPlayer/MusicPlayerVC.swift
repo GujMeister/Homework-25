@@ -67,6 +67,14 @@ class MusicPlayerVC: UIViewController {
         return slider
     }()
     
+//    let progressBar: UIProgressView = {
+//        let progressBar = UIProgressView()
+//        progressBar.progressTintColor = .white
+//        progressBar.trackTintColor = UIColor.white.withAlphaComponent(0.3)
+//        progressBar.translatesAutoresizingMaskIntoConstraints = false
+//        return progressBar
+//    }()
+    
     private let timeElapsedLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -220,7 +228,7 @@ class MusicPlayerVC: UIViewController {
             playButton.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 20),
             playButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1),
             playButton.widthAnchor.constraint(equalTo: playButton.heightAnchor),
-            
+
             forwardButton.leadingAnchor.constraint(equalTo: playButton.trailingAnchor, constant: 20),
             forwardButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             forwardButton.heightAnchor.constraint(equalTo: playButton.heightAnchor, multiplier: 0.45),
@@ -306,7 +314,7 @@ class MusicPlayerVC: UIViewController {
         let secondsLeft = totalSeconds - elapsedSeconds
         timeLeftLabel.text = viewModel.formatSecondsToString(secondsLeft)
     }
-
+    
     // MARK: - Play button Functions
     func playButtonTapped(_ sender: UIButton) {
       viewModel.playButtonTapped()
@@ -338,3 +346,5 @@ extension MusicPlayerVC {
         timeLeftLabel.text = viewModel.formatSecondsToString(secondsLeft)
     }
 }
+
+

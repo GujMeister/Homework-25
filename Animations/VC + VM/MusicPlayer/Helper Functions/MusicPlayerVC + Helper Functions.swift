@@ -27,7 +27,7 @@ extension MusicPlayerVC {
             button.tintColor = .white
         }
     }
-
+    
     func toggleSliderTimer() {
         sliderTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
@@ -43,3 +43,4 @@ extension MusicPlayerVC {
         sliderTimer = nil
     }
 }
+
