@@ -17,6 +17,7 @@
 		8589E95E2BEE868000CE5FBA /* MusicPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589E95D2BEE868000CE5FBA /* MusicPlayerVM.swift */; };
 		8589E9602BEEB01000CE5FBA /* FiraGO-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8589E95F2BEEB01000CE5FBA /* FiraGO-Regular.ttf */; };
 		8589E9622BEEB1A200CE5FBA /* FiraGO-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8589E9612BEEB1A200CE5FBA /* FiraGO-Bold.ttf */; };
+		8589E9642BEEBC8000CE5FBA /* MusicPlayerVC + Helper Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8589E9632BEEBC8000CE5FBA /* MusicPlayerVC + Helper Functions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		8589E95D2BEE868000CE5FBA /* MusicPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerVM.swift; sourceTree = "<group>"; };
 		8589E95F2BEEB01000CE5FBA /* FiraGO-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FiraGO-Regular.ttf"; sourceTree = "<group>"; };
 		8589E9612BEEB1A200CE5FBA /* FiraGO-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FiraGO-Bold.ttf"; sourceTree = "<group>"; };
+		8589E9632BEEBC8000CE5FBA /* MusicPlayerVC + Helper Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MusicPlayerVC + Helper Functions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 		8589E9512BED824A00CE5FBA /* MusicPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				8589E9652BEEBC8600CE5FBA /* Helper Functions */,
 				8589E93E2BED815200CE5FBA /* MusicPlayerVC.swift */,
 				8589E95D2BEE868000CE5FBA /* MusicPlayerVM.swift */,
 			);
@@ -117,6 +120,14 @@
 				8589E9562BEE736100CE5FBA /* UIButton.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		8589E9652BEEBC8600CE5FBA /* Helper Functions */ = {
+			isa = PBXGroup;
+			children = (
+				8589E9632BEEBC8000CE5FBA /* MusicPlayerVC + Helper Functions.swift */,
+			);
+			path = "Helper Functions";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,6 +207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8589E9572BEE736100CE5FBA /* UIButton.swift in Sources */,
+				8589E9642BEEBC8000CE5FBA /* MusicPlayerVC + Helper Functions.swift in Sources */,
 				8589E95E2BEE868000CE5FBA /* MusicPlayerVM.swift in Sources */,
 				8589E93F2BED815200CE5FBA /* MusicPlayerVC.swift in Sources */,
 				8589E9552BED8BBF00CE5FBA /* UIColor.swift in Sources */,

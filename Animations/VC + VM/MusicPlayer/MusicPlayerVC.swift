@@ -9,10 +9,10 @@ import UIKit
 
 class MusicPlayerVC: UIViewController {
     
-    var viewModel: MusicPlayerVM = MusicPlayerVM()
+    private var viewModel: MusicPlayerVM = MusicPlayerVM()
     
-    private var sliderTimer: Timer?
-    var selectedIcon: UIButton?
+    internal var sliderTimer: Timer?
+    private var selectedIcon: UIButton?
     
     private let categoryLabel: UILabel = {
         let label = UILabel()
@@ -50,7 +50,7 @@ class MusicPlayerVC: UIViewController {
         return label
     }()
     
-    private lazy var timeSlider: UISlider = {
+    internal lazy var timeSlider: UISlider = {
         let slider = UISlider()
         slider.minimumTrackTintColor = UIColor.white
         slider.minimumValue = 0
@@ -133,7 +133,7 @@ class MusicPlayerVC: UIViewController {
         return view
     }()
     
-    private lazy var homeButton: UIButton = {
+     internal lazy var homeButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "house")
         button.setImage(image, for: .normal)
@@ -144,7 +144,7 @@ class MusicPlayerVC: UIViewController {
         return button
     }()
     
-    private lazy var musicButton: UIButton = {
+    internal lazy var musicButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "music.note")
         button.setImage(image, for: .normal)
@@ -155,7 +155,7 @@ class MusicPlayerVC: UIViewController {
         return button
     }()
     
-    private lazy var loveButton: UIButton = {
+    internal lazy var loveButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "heart")
         button.createButton(with: image!)
@@ -297,26 +297,6 @@ class MusicPlayerVC: UIViewController {
         }
     }
     
-    //agia logika
-    func deselectAllButtons(except selectedButton: UIButton) {
-        homeButton.isSelected = false
-        resetButtonSize(homeButton)
-        
-        musicButton.isSelected = false
-        resetButtonSize(musicButton)
-        
-        loveButton.isSelected = false
-        resetButtonSize(loveButton)
-    }
-    
-    func resetButtonSize(_ button: UIButton?) {
-        guard let button = button else { return }
-        UIView.animate(withDuration: 0.3) {
-            button.transform = .identity
-            button.tintColor = .white
-        }
-    }
-    
     // MARK: - Slider values and Label
     func sliderValueChanged(_ slider: UISlider) {
         let elapsedSeconds = Int(slider.value)
@@ -328,7 +308,6 @@ class MusicPlayerVC: UIViewController {
     }
 
     // MARK: - Play button Functions
-    
     func playButtonTapped(_ sender: UIButton) {
       viewModel.playButtonTapped()
       print(viewModel.isMusicPlaying)
@@ -346,22 +325,6 @@ class MusicPlayerVC: UIViewController {
         }
       }
     }
-
-    //agia logika
-    func toggleSliderTimer() {
-        sliderTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-            if self.timeSlider.value < self.timeSlider.maximumValue {
-                self.timeSlider.value += 1.0
-                self.updateLabelsForMusicPlaying()
-            }
-        }
-    }
-    //da agi
-    func stopSliderTimer() {
-        sliderTimer?.invalidate()
-        sliderTimer = nil
-    }
 }
 
 // MARK: - Updating Labels
@@ -374,8 +337,4 @@ extension MusicPlayerVC {
         let secondsLeft = totalSeconds - elapsedSeconds
         timeLeftLabel.text = viewModel.formatSecondsToString(secondsLeft)
     }
-}
-
-#Preview {
-    MusicPlayerVC()
 }
